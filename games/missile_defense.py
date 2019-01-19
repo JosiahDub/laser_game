@@ -92,9 +92,8 @@ class MissileDefense(Game):
                 self.life_pos -= self.life_distance
                 self.life_counter.set_servo(int(self.center - self.bound/2) - 10,
                                             self.life_pos)
-            else:
-                self.num_missiles -= 1
             if hit or lose:
+                self.num_missiles -= 1
                 hit = False
                 lose = False
                 self.missile.laser.off()
