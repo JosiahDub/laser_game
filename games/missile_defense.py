@@ -231,6 +231,7 @@ class MissileDefense(Game):
         while True:
             if num_losers == 0:
                 break
+            self.curr_time = time.time()
             if self.curr_time - prev_time >= self.time_rate:
                 prev_time = self.curr_time
                 try:
