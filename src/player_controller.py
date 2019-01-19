@@ -120,8 +120,8 @@ def pro_controller_factory():
         pro = ProController()
     except OSError:
         raise OSError('Ensure the controller is plugged in') from None
-    left = PlayerLeftPro(32, 32, 5, 59, 5, 59, pro=pro)
-    right = PlayerRightPro(16, 16, 3, 29, 3, 29, pro=pro)
+    left = PlayerLeftPro(31, 35, 4, 57, 7, 62, pro=pro)
+    right = PlayerRightPro(16, 17, 3, 30, 3, 31, pro=pro)
     return left, right
 
 
