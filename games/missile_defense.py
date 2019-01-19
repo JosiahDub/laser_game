@@ -100,12 +100,12 @@ class MissileDefense(Game):
                 missile = self.make_missile(missile_rate)
                 missile_respawn = True
                 respawn_time = time.time()
-            # Win/lose conditions
-            if self.num_missiles == 0:
-                self.win()
-                break
-            elif self.lives == 0:
+            # Win/lose conditions. Check lose first in case of lives=missiles=0
+            if self.lives == 0:
                 self.lose()
+                break
+            elif self.num_missiles == 0:
+                self.win()
                 break
             self.curr_time = time.time()
             if self.curr_time - prev_time >= self.time_rate:
@@ -148,10 +148,11 @@ class MissileDefense(Game):
                 self.player_fired = False
                 self.player.laser.on()
 
-    def make_missile(self, rate=1) -> Generator:
+    def make_missile(self, rate=1, npc: NPC=None) -> Generator:
         """
         Creates a new random missile
         :param rate:
+        :param npc:
         :return:
         """
         y_low = int(self.center - self.bound / 2)
@@ -164,7 +165,10 @@ class MissileDefense(Game):
         else:
             # Last five missiles get cray-cray
             path = Corkscrew(x_start, y_high, x_end, y_low, 10, 0, 1, rate)
-        missile = self.missile.follow_path(path.data())
+        if npc is None:
+            missile = self.missile.follow_path(path.data())
+        else:
+            missile = npc.follow_path(path.data())
         # Let the servos get into position. Yield once for init, yield again to move servos
         missile.__next__()
         missile.__next__()
@@ -175,14 +179,18 @@ class MissileDefense(Game):
         "We're in the endgame now" - Wizard guy.
         :return:
         """
+        # Free up the GPIO pin
+        del self.player.laser
+        del self.missile.laser
+        del self.life_counter.laser
         npc1 = NPC(self.pwm, self.player_turret)
         npc2 = NPC(self.pwm, self.missile_turret)
         npc3 = NPC(self.pwm, self.life_turret)
         radius = 20
-        rate = 0.104
-        circle1 = Circle(360, 375, radius, 0, rate)
+        rate = 0.1
+        circle1 = Circle(415, 375, radius, 0, rate)
         circle2 = Circle(375, 375, radius, 0, rate)
-        circle3 = Circle(390, 375, radius, 0, rate, clockwise=False)
+        circle3 = Circle(335, 375, radius, 0, rate, clockwise=False)
         data1 = npc1.follow_path(circle1.data())
         data1.__next__()
         data1.__next__()
@@ -195,8 +203,8 @@ class MissileDefense(Game):
         data3.__next__()
         data3.__next__()
         npc3.laser.on()
-        for _ in range(0, 120):
-            if _ == 60:
+        for _ in range(0, 400):
+            if _ % 100 == 0:
                 circle3.clockwise = False
             data1.__next__()
             data2.__next__()
@@ -207,32 +215,36 @@ class MissileDefense(Game):
         "Did we just lose?" - Sun-Count.
         :return:
         """
+        # Free up the GPIO pin
+        del self.player.laser
+        del self.missile.laser
+        del self.life_counter.laser
         npc1 = NPC(self.pwm, self.player_turret)
         npc2 = NPC(self.pwm, self.missile_turret)
         npc3 = NPC(self.pwm, self.life_turret)
-        line1 = Line(360, 400, 360, 350, 2)
-        line2 = Line(375, 400, 375, 350, 2)
-        line3 = Line(390, 400, 390, 350, 2)
-        data1 = npc1.follow_path(line1.data())
-        data1.__next__()
-        data1.__next__()
-        npc1.laser.on()
-        data2 = npc2.follow_path(line2.data())
-        data2.__next__()
-        data2.__next__()
-        npc2.laser.on()
-        data3 = npc3.follow_path(line3.data())
-        data3.__next__()
-        data3.__next__()
-        npc3.laser.on()
-        # Three short pulses, then one long one
-        for _ in range(0, 3):
-            for __ in range(0, 10):
-                data1.__next__()
-                data2.__next__()
-                data3.__next__()
-            time.sleep(0.2)
-        for __ in range(0, 20):
-            data1.__next__()
-            data2.__next__()
-            data3.__next__()
+        rate = 3
+        m1 = self.make_missile(rate, npc1)
+        m2 = self.make_missile(rate, npc2)
+        m3 = self.make_missile(rate, npc3)
+        prev_time = 0
+        num_losers = 15
+        while True:
+            if num_losers == 0:
+                break
+            if self.curr_time - prev_time >= self.time_rate:
+                prev_time = self.curr_time
+                try:
+                    m1.__next__()
+                except StopIteration:
+                    m1 = self.make_missile(rate, npc1)
+                    num_losers -= 1
+                try:
+                    m2.__next__()
+                except StopIteration:
+                    m2 = self.make_missile(rate, npc2)
+                    num_losers -= 1
+                try:
+                    m3.__next__()
+                except StopIteration:
+                    m4 = self.make_missile(rate, npc3)
+                    num_losers -= 1
