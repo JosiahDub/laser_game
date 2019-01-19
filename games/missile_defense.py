@@ -222,7 +222,10 @@ class MissileDefense(Game):
         npc1 = NPC(self.pwm, self.player_turret)
         npc2 = NPC(self.pwm, self.missile_turret)
         npc3 = NPC(self.pwm, self.life_turret)
-        rate = 3
+        npc1.laser.on()
+        npc2.laser.on()
+        npc3.laser.on()
+        rate = 2
         m1 = self.make_missile(rate, npc1)
         m2 = self.make_missile(rate, npc2)
         m3 = self.make_missile(rate, npc3)
