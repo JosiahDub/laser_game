@@ -171,36 +171,64 @@ class MissileDefense(Game):
         "We're in the endgame now" - Wizard guy.
         :return:
         """
-        circle_npc1 = NPC(self.pwm, self.player_turret)
-        circle_npc2 = NPC(self.pwm, self.missile_turret)
-        circle_npc3 = NPC(self.pwm, self.life_turret)
+        npc1 = NPC(self.pwm, self.player_turret)
+        npc2 = NPC(self.pwm, self.missile_turret)
+        npc3 = NPC(self.pwm, self.life_turret)
         radius = 20
         rate = 0.104
         circle1 = Circle(360, 375, radius, 0, rate)
         circle2 = Circle(375, 375, radius, 0, rate)
         circle3 = Circle(390, 375, radius, 0, rate, clockwise=False)
-        circle1_data = circle_npc1.follow_path(circle1.data())
-        circle1_data.__next__()
-        circle1_data.__next__()
-        circle_npc1.laser.on()
-        circle2_data = circle_npc2.follow_path(circle2.data())
-        circle2_data.__next__()
-        circle2_data.__next__()
-        circle_npc2.laser.on()
-        circle3_data = circle_npc3.follow_path(circle3.data())
-        circle3_data.__next__()
-        circle3_data.__next__()
-        circle_npc3.laser.on()
+        data1 = npc1.follow_path(circle1.data())
+        data1.__next__()
+        data1.__next__()
+        npc1.laser.on()
+        data2 = npc2.follow_path(circle2.data())
+        data2.__next__()
+        data2.__next__()
+        npc2.laser.on()
+        data3 = npc3.follow_path(circle3.data())
+        data3.__next__()
+        data3.__next__()
+        npc3.laser.on()
         for _ in range(0, 120):
             if _ == 60:
                 circle3.clockwise = False
-            circle1_data.__next__()
-            circle2_data.__next__()
-            circle3_data.__next__()
+            data1.__next__()
+            data2.__next__()
+            data3.__next__()
 
     def lose(self):
         """
         "Did we just lose?" - Sun-Count.
         :return:
         """
-        pass
+        npc1 = NPC(self.pwm, self.player_turret)
+        npc2 = NPC(self.pwm, self.missile_turret)
+        npc3 = NPC(self.pwm, self.life_turret)
+        line1 = Line(360, 400, 360, 350, 2)
+        line2 = Line(375, 400, 375, 350, 2)
+        line3 = Line(390, 400, 390, 350, 2)
+        data1 = npc1.follow_path(line1.data())
+        data1.__next__()
+        data1.__next__()
+        npc1.laser.on()
+        data2 = npc2.follow_path(line2.data())
+        data2.__next__()
+        data2.__next__()
+        npc2.laser.on()
+        data3 = npc3.follow_path(line3.data())
+        data3.__next__()
+        data3.__next__()
+        npc3.laser.on()
+        # Three short pulses, then one long one
+        for _ in range(0, 3):
+            for __ in range(0, 10):
+                data1.__next__()
+                data2.__next__()
+                data3.__next__()
+            time.sleep(0.2)
+        for __ in range(0, 20):
+            data1.__next__()
+            data2.__next__()
+            data3.__next__()
