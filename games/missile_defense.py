@@ -160,3 +160,17 @@ class MissileDefense(Game):
         missile.__next__()
         missile.__next__()
         return missile
+
+    def win(self):
+        """
+        "We're in the endgame now" - Wizard guy.
+        :return:
+        """
+        pass
+
+    def lose(self):
+        """
+        "Did we just lose?" - Sun-Count.
+        :return:
+        """
+        pass
