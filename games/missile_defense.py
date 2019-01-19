@@ -2,7 +2,7 @@ import time
 import random
 from typing import Generator
 from math import sqrt
-from paths import Line
+from paths import Line, Circle
 from src import Player, NPC
 from .game import Game
 from src.player_controller import PlayerController
@@ -54,16 +54,19 @@ class MissileDefense(Game):
         '''
         INIT PLAYER
         '''
+        self.player_turret = player_turret
         self.player = Player(bound, bound, pwm, player_turret, controller)
         self.player.laser.on()
         '''
         INIT MISSILE
         '''
+        self.missile_turret = missile_turret
         self.missile = NPC(pwm, missile_turret)
         self.missile.laser.on()
         '''
         INIT LIFE COUNTER
         '''
+        self.life_turret = life_turret
         self.life_counter = NPC(pwm, life_turret)
         self.life_pos = int(center + bound/2)
         # Put life counter out of bounds
@@ -99,9 +102,11 @@ class MissileDefense(Game):
                 respawn_time = time.time()
             # Win/lose conditions
             if player_score == 10:
-                pass
+                self.win()
+                break
             elif self.lives == 0:
-                pass
+                self.lose()
+                break
             self.curr_time = time.time()
             if self.curr_time - prev_time >= self.time_rate:
                 prev_time = self.curr_time
@@ -166,7 +171,32 @@ class MissileDefense(Game):
         "We're in the endgame now" - Wizard guy.
         :return:
         """
-        pass
+        circle_npc1 = NPC(self.pwm, self.player_turret)
+        circle_npc2 = NPC(self.pwm, self.missile_turret)
+        circle_npc3 = NPC(self.pwm, self.life_turret)
+        radius = 20
+        rate = 0.104
+        circle1 = Circle(360, 375, radius, 0, rate)
+        circle2 = Circle(375, 375, radius, 0, rate)
+        circle3 = Circle(390, 375, radius, 0, rate, clockwise=False)
+        circle1_data = circle_npc1.follow_path(circle1.data())
+        circle1_data.__next__()
+        circle1_data.__next__()
+        circle_npc1.laser.on()
+        circle2_data = circle_npc2.follow_path(circle2.data())
+        circle2_data.__next__()
+        circle2_data.__next__()
+        circle_npc2.laser.on()
+        circle3_data = circle_npc3.follow_path(circle3.data())
+        circle3_data.__next__()
+        circle3_data.__next__()
+        circle_npc3.laser.on()
+        for _ in range(0, 120):
+            if _ == 60:
+                circle3.clockwise = False
+            circle1_data.__next__()
+            circle2_data.__next__()
+            circle3_data.__next__()
 
     def lose(self):
         """
