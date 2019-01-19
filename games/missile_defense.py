@@ -2,7 +2,7 @@ import time
 import random
 from typing import Generator
 from math import sqrt
-from paths import Line, Circle
+from paths import Line, Circle, Corkscrew
 from src import Player, NPC
 from .game import Game
 from src.player_controller import PlayerController
@@ -20,6 +20,7 @@ class MissileDefense(Game):
     GAME INFO
     '''
     curr_time = 0
+    num_missiles = 20
 
     '''
     PLAYER INFO
@@ -79,20 +80,20 @@ class MissileDefense(Game):
         hit = False
         lose = False
         prev_time = 0
-        player_score = 0
         missile_rate = 1
         missile = self.make_missile()
         missile_respawn = False
         respawn_time = time.time()
         while self.playing:
             if hit:
-                player_score += 1
                 missile_rate += self.rate_increase
-            if lose:
+            elif lose:
                 self.lives -= 1
                 self.life_pos -= self.life_distance
                 self.life_counter.set_servo(int(self.center - self.bound/2) - 10,
                                             self.life_pos)
+            else:
+                self.num_missiles -= 1
             if hit or lose:
                 hit = False
                 lose = False
@@ -101,7 +102,7 @@ class MissileDefense(Game):
                 missile_respawn = True
                 respawn_time = time.time()
             # Win/lose conditions
-            if player_score == 10:
+            if self.num_missiles == 0:
                 self.win()
                 break
             elif self.lives == 0:
@@ -158,8 +159,12 @@ class MissileDefense(Game):
         y_high = int(self.center + self.bound / 2)
         x_start = random.randint(y_low, y_high)
         # Since the controllers can't reach the corners, restrict them
-        x_end = random.randint(y_low + 20, y_high - 20)
-        path = Line(x_start, y_high, x_end, y_low, rate)
+        x_end = random.randint(y_low + 15, y_high - 15)
+        if self.num_missiles > 5:
+            path = Line(x_start, y_high, x_end, y_low, rate)
+        else:
+            # Last five missiles get cray-cray
+            path = Corkscrew(x_start, y_high, x_end, y_low, 10, 0, 1, rate)
         missile = self.missile.follow_path(path.data())
         # Let the servos get into position. Yield once for init, yield again to move servos
         missile.__next__()
