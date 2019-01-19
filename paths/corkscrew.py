@@ -16,17 +16,19 @@ class Corkscrew(Circle):
     def data(self):
         x = self._radius * sin(self._angle) + self.x_center
         y = self._radius * cos(self._angle) + self.y_center
+        keep_going = True
         yield int(x), int(y)
         angle_rate = self._angle + self._rate
-        while fabs(x - self.x_end) > fabs(self.x_rate) and fabs(y - self.y_end) > fabs(self.y_rate):
-            self.x_center += self.x_rate
-            self.y_center += self.y_rate
+        while keep_going:
+            keep_going = False
+            if fabs(x - self.x_end) > fabs(self.x_rate):
+                self.x_center += self.x_rate
+                keep_going = True
+            if fabs(y - self.y_end) > fabs(self.y_rate):
+                self.y_center += self.y_rate
+                keep_going = True
             x = self._radius * sin(angle_rate) + self.x_center + self.x_rate
             y = self._radius * cos(angle_rate) + self.y_center + self.y_rate
             yield int(x), int(y)
             angle_rate += self._rate
-            # Check to normalize
-            if angle_rate >= 2 * pi:
-                angle_rate -= 2 * pi
-            elif angle_rate <= -2 * pi:
-                angle_rate += 2 * pi
+        yield self.x_end, self.y_end
