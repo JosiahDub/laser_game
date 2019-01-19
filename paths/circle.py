@@ -1,6 +1,7 @@
 from math import sin, cos, pi, fabs
 from .path import Path
 
+
 class Circle(Path):
 
     def __init__(self, x_center, y_center, radius, angle, rate, clockwise=True):
