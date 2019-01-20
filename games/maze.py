@@ -9,16 +9,16 @@ from src.turret import Turret
 class Wall:
     thickness = 6
 
-    def __init__(self, x_start, y_start, x_end=0, y_end=0):
+    def __init__(self, x_start, y_start, x_end=None, y_end=None):
         self.x_start = x_start
         self.y_start = y_start
-        if not x_end:
+        if x_end is None:
             self.x_end = x_start + self.thickness
             self.is_vertical = True
         else:
             self.is_vertical = False
             self.x_end = x_end
-        if not y_end:
+        if y_end is None:
             self.y_end = y_start + self.thickness
             self.is_horizontal = True
         else:
@@ -42,18 +42,24 @@ class Wall:
 
 
 class MazeWalls:
+
+    # 100 divided into 6 with padding
+    wall_positions = {0: 0, 1: 16, 2: 33, 3: 49, 4: 66, 5: 82, 6: 100}
+
     def __init__(self, x_offset, y_offset):
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.walls = []
 
-    def add_wall(self, x_start, y_start, x_end=0, y_end=0):
-        if x_end:
-            x_end += self.x_offset
-        if y_end:
-            y_end += self.y_offset
-        new_wall = Wall(x_start + self.x_offset, y_start + self.x_offset,
-                        x_end, y_end)
+    def add_wall(self, x_start, y_start, x_end=None, y_end=None):
+        if x_end is not None:
+            x_end = self.wall_positions[x_end] + self.x_offset
+        if y_end is not None:
+            y_end = self.wall_positions[y_end] + self.y_offset
+        new_wall = Wall(self.wall_positions[x_start] + self.x_offset,
+                        self.wall_positions[y_start] + self.x_offset,
+                        x_end,
+                        y_end)
         self.walls.append(new_wall)
 
     def check_collision(self, x, y):
@@ -62,38 +68,29 @@ class MazeWalls:
             binding.update(wall.has_collided(x, y))
         return binding
 
-# 100 divided into 6 with padding
-# 0
-# 16
-# 33
-# 49
-# 66
-# 82
-# 100
-
 
 WALLS = MazeWalls(325, 325)
 # Left most third
-WALLS.add_wall(y_start=82, y_end=100,  x_start=82)  # 1
-WALLS.add_wall(y_start=66, x_start=82, x_end=100)   # 2
-WALLS.add_wall(y_start=82, y_end=100,  x_start=66)  # 3
-WALLS.add_wall(y_start=16, y_end=66,   x_start=66)  # 4
-WALLS.add_wall(y_start=49, x_start=66, x_end=82)    # 5
-WALLS.add_wall(y_start=33, x_start=66, x_end=82)    # 6
-WALLS.add_wall(y_start=0,  y_end=16,   x_start=82)  # 7
+WALLS.add_wall(y_start=5, y_end=6,  x_start=5)  # 1
+WALLS.add_wall(y_start=4, x_start=5, x_end=6)   # 2
+WALLS.add_wall(y_start=5, y_end=6,  x_start=4)  # 3
+WALLS.add_wall(y_start=3, y_end=4,   x_start=4)  # 4
+WALLS.add_wall(y_start=3, x_start=4, x_end=5)    # 5
+WALLS.add_wall(y_start=1, y_end=3, x_start=5)    # 6
+WALLS.add_wall(y_start=0,  y_end=2,   x_start=4)  # 7
 # Middle third
-WALLS.add_wall(y_start=82, x_start=49, x_end=66)    # 8
-WALLS.add_wall(y_start=66, y_end=82,   x_start=49)  # 9
-WALLS.add_wall(y_start=66, x_start=49, x_end=66)    # 10
-WALLS.add_wall(y_start=16, y_end=82,   x_start=33)  # 11
-WALLS.add_wall(y_start=49, x_start=33, x_end=49)    # 12
-WALLS.add_wall(y_start=0,  y_end=33,   x_start=49)  # 13
+WALLS.add_wall(y_start=, x_start=, x_end=)    # 8
+WALLS.add_wall(y_start=, y_end=,   x_start=)  # 9
+WALLS.add_wall(y_start=, x_start=, x_end=)    # 10
+WALLS.add_wall(y_start=, y_end=,   x_start=)  # 11
+WALLS.add_wall(y_start=, x_start=, x_end=)    # 12
+WALLS.add_wall(y_start=,  y_end=,   x_start=)  # 13
 # Right most third
-WALLS.add_wall(y_start=49, y_end=82,   x_start=16)  # 14
-WALLS.add_wall(y_start=49, x_start=0,  x_end=16)    # 15
-WALLS.add_wall(y_start=33, x_start=0,  x_end=16)    # 16
-WALLS.add_wall(y_start=16, x_start=16, x_end=33)    # 17
-WALLS.add_wall(y_start=0,  y_end=16,   x_start=16)  # 18
+WALLS.add_wall(y_start=, y_end=,   x_start=)  # 14
+WALLS.add_wall(y_start=, x_start=,  x_end=)    # 15
+WALLS.add_wall(y_start=, x_start=,  x_end=)    # 16
+WALLS.add_wall(y_start=, x_start=, x_end=)    # 17
+WALLS.add_wall(y_start=,  y_end=,   x_start=)  # 18
 
 
 class Maze(Game):
