@@ -1,6 +1,7 @@
 import time
 from .game import Game
-from src import Player
+from src import Player, NPC
+from paths import Circle
 from src.player_controller import PlayerController
 from src.turret import Turret
 
@@ -97,11 +98,15 @@ WALLS.add_wall(y_start=0,  y_end=16,   x_start=16)  # 18
 
 class Maze(Game):
 
+    # TOUCHDOWN
+    endzone = [[0, 16], [0, 16]]
+
     def __init__(self, center, bound, pwm,
                  controller: PlayerController,
                  player_turret: Turret,
                  ):
         super().__init__(center, bound, pwm)
+        self.player_turret = player_turret
         self.player = Player(bound, bound, pwm, player_turret, controller,
                              initial_x=415, initial_y=415,
                              x_center=375, y_center=375)
@@ -117,3 +122,25 @@ class Maze(Game):
                 prev_time = curr_time
                 x, y = self.player.manual_servo(**binding)
                 binding = WALLS.check_collision(x, y)
+                centered_x = x - self.center
+                centered_y = y - self.center
+                # Check if the player scored the winning goal!!!
+                if self.endzone[0][0] <= centered_x <= self.endzone[0][1] and \
+                        self.endzone[1][0] <= centered_y <= self.endzone[1][1]:
+                    self.win()
+                    break
+
+    def win(self):
+        # Free up the GPIO pin
+        del self.player.laser
+        npc = NPC(self.pwm, self.player_turret)
+        radius = 20
+        rate = 0.1
+        circle = Circle(375, 375, radius, 0, rate)
+        data = npc.follow_path(circle.data())
+        data.__next__()
+        data.__next__()
+        npc.laser.on()
+        for _ in range(0, 400):
+            if _ % 100 == 0:
+                circle.clockwise = False
