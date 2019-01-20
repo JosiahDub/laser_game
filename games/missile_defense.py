@@ -250,5 +250,5 @@ class MissileDefense(Game):
                 try:
                     m3.__next__()
                 except StopIteration:
-                    m4 = self.make_missile(rate, npc3)
+                    m3 = self.make_missile(rate, npc3)
                     num_losers -= 1
