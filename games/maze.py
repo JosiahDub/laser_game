@@ -71,26 +71,27 @@ class MazeWalls:
 
 WALLS = MazeWalls(325, 325)
 # Left most third
-WALLS.add_wall(y_start=5, y_end=6,  x_start=5)  # 1
-WALLS.add_wall(y_start=4, x_start=5, x_end=6)   # 2
-WALLS.add_wall(y_start=5, y_end=6,  x_start=4)  # 3
+WALLS.add_wall(y_start=5, y_end=6,   x_start=5)  # 1
+WALLS.add_wall(y_start=4, x_start=5, x_end=6)    # 2
+WALLS.add_wall(y_start=5, y_end=6,   x_start=4)  # 3
 WALLS.add_wall(y_start=3, y_end=4,   x_start=4)  # 4
 WALLS.add_wall(y_start=3, x_start=4, x_end=5)    # 5
-WALLS.add_wall(y_start=1, y_end=3, x_start=5)    # 6
-WALLS.add_wall(y_start=0,  y_end=2,   x_start=4)  # 7
+WALLS.add_wall(y_start=1, y_end=3,   x_start=5)  # 6
+WALLS.add_wall(y_start=0, y_end=2,   x_start=4)  # 7
 # Middle third
-WALLS.add_wall(y_start=, x_start=, x_end=)    # 8
-WALLS.add_wall(y_start=, y_end=,   x_start=)  # 9
-WALLS.add_wall(y_start=, x_start=, x_end=)    # 10
-WALLS.add_wall(y_start=, y_end=,   x_start=)  # 11
-WALLS.add_wall(y_start=, x_start=, x_end=)    # 12
-WALLS.add_wall(y_start=,  y_end=,   x_start=)  # 13
+WALLS.add_wall(y_start=5, x_start=3, x_end=4)    # 8
+WALLS.add_wall(y_start=4, y_end=5,   x_start=3)  # 9
+WALLS.add_wall(y_start=4, x_start=3, x_end=4)    # 10
+WALLS.add_wall(y_start=3, x_start=2, x_end=3)    # 11
+WALLS.add_wall(y_start=1, y_end=2,   x_start=3)  # 12
+WALLS.add_wall(y_start=1, y_end=3,   x_start=4)  # 13
 # Right most third
-WALLS.add_wall(y_start=, y_end=,   x_start=)  # 14
-WALLS.add_wall(y_start=, x_start=,  x_end=)    # 15
-WALLS.add_wall(y_start=, x_start=,  x_end=)    # 16
-WALLS.add_wall(y_start=, x_start=, x_end=)    # 17
-WALLS.add_wall(y_start=,  y_end=,   x_start=)  # 18
+WALLS.add_wall(y_start=1, y_end=5,   x_start=2)  # 14
+WALLS.add_wall(y_start=5, x_start=1, x_end=2)    # 15
+WALLS.add_wall(y_start=2, y_end=4,   x_start=1)  # 16
+WALLS.add_wall(y_start=2, x_start=0, x_end=1)    # 17
+WALLS.add_wall(y_start=1, x_start=1, x_end=2)    # 18
+WALLS.add_wall(y_start=0, y_end=1,   x_start=1)  # 19
 
 
 class Maze(Game):
