@@ -84,7 +84,7 @@ WALLS.add_wall(y_start=4, y_end=5,   x_start=3)  # 9
 WALLS.add_wall(y_start=4, x_start=3, x_end=4)    # 10
 WALLS.add_wall(y_start=3, x_start=2, x_end=3)    # 11
 WALLS.add_wall(y_start=1, y_end=2,   x_start=3)  # 12
-WALLS.add_wall(y_start=1, y_end=3,   x_start=4)  # 13
+WALLS.add_wall(y_start=1, x_start=3, x_end=4)  # 13
 # Right most third
 WALLS.add_wall(y_start=1, y_end=5,   x_start=2)  # 14
 WALLS.add_wall(y_start=5, x_start=1, x_end=2)    # 15
@@ -120,8 +120,8 @@ class Maze(Game):
                 prev_time = curr_time
                 x, y = self.player.manual_servo(**binding)
                 binding = WALLS.check_collision(x, y)
-                centered_x = x - self.center
-                centered_y = y - self.center
+                centered_x = x - self.center + self.bound/2
+                centered_y = y - self.center + self.bound/2
                 # Check if the player scored the winning goal!!!
                 if self.endzone[0][0] <= centered_x <= self.endzone[0][1] and \
                         self.endzone[1][0] <= centered_y <= self.endzone[1][1]:
@@ -142,3 +142,4 @@ class Maze(Game):
         for _ in range(0, 400):
             if _ % 100 == 0:
                 circle.clockwise = False
+            data.__next__()
