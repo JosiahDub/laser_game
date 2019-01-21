@@ -84,7 +84,7 @@ WALLS.add_wall(y_start=4, y_end=5,   x_start=3)  # 9
 WALLS.add_wall(y_start=4, x_start=3, x_end=4)    # 10
 WALLS.add_wall(y_start=3, x_start=2, x_end=3)    # 11
 WALLS.add_wall(y_start=1, y_end=2,   x_start=3)  # 12
-WALLS.add_wall(y_start=1, x_start=3, x_end=4)  # 13
+WALLS.add_wall(y_start=1, x_start=3, x_end=4)    # 13
 # Right most third
 WALLS.add_wall(y_start=1, y_end=5,   x_start=2)  # 14
 WALLS.add_wall(y_start=5, x_start=1, x_end=2)    # 15
@@ -139,7 +139,7 @@ class Maze(Game):
         data.__next__()
         data.__next__()
         npc.laser.on()
-        for _ in range(0, 400):
+        for _ in range(0, 600):
             if _ % 100 == 0:
                 circle.clockwise = False
             data.__next__()
