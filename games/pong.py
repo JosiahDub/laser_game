@@ -61,7 +61,11 @@ class Pong(Game):
                 self.win(1)
             elif player_2_points == self.win_points:
                 self.win(2)
-            angle = random.uniform(0, 6.28)
+            # pi/2 cone facing either player
+            if random.randint(0, 1):
+                angle = random.uniform(-0.785, 0.785)
+            else:
+                angle = random.uniform(2.355, 3,925)
             ball = self.make_ball(rate=self.ball_rate, angle=angle)
             prev_time = 0
             # xs, ys = ball.send((horizontal_hit, vertical_hit))
