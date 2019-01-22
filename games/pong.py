@@ -15,7 +15,6 @@ class Pong(Game):
     PLAYER INFO
     '''
     paddle_length = 15
-    x_hit = 2
 
     '''
     BALL INFO
@@ -99,7 +98,7 @@ class Pong(Game):
                         bottom_hit = ys <= (self.center - self.bound/2)
                         # Player hit
                         if (y_1_hit and x_1_hit) or (y_2_hit and x_2_hit):
-                            self.bounce.vertical_hit()
+                            self.bounce.vertical_hit(random_bounce=True)
                             self.bounce.rate += 0.1
                         # Top or bottom wall hit
                         elif top_hit or bottom_hit:
@@ -151,7 +150,7 @@ class Pong(Game):
         prev_time = 0
         while self.playing:
             self.curr_time = time.time()
-            if self.curr_time - prev_time >= self.time_rate*2:
+            if self.curr_time - prev_time >= self.time_rate*3:
                 prev_time = self.curr_time
                 data.__next__()
                 spin_spin += 1
