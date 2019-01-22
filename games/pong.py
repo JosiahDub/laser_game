@@ -14,8 +14,8 @@ class Pong(Game):
     '''
     PLAYER INFO
     '''
-    paddle_length = 10
-    x_hit = 0
+    paddle_length = 15
+    x_hit = 2
 
     '''
     BALL INFO
