@@ -68,12 +68,10 @@ class Pong(Game):
                 angle = random.uniform(2.355, 3.925)
             ball = self.make_ball(rate=self.ball_rate, angle=angle)
             prev_time = 0
-            # xs, ys = ball.send((horizontal_hit, vertical_hit))
             while self.playing:
                 self.curr_time = time.time()
                 if self.curr_time - prev_time >= self.time_rate:
                     if not self.resetting:
-                        # xs, ys = ball.send((horizontal_hit, vertical_hit))
                         xs, ys = ball.__next__()
                     else:
                         xs = self.center
@@ -81,8 +79,8 @@ class Pong(Game):
                     prev_time = self.curr_time
                     x_1, y_1 = self.player_1.set_servo()
                     x_2, y_2 = self.player_2.set_servo()
-                    x_1_hit = fabs(x_1 - xs) <= self.x_hit
-                    x_2_hit = fabs(x_2 - xs) <= self.x_hit
+                    x_1_hit = xs > 415
+                    x_2_hit = xs < 320
                     y_1_hit = fabs(y_1 - ys) <= self.paddle_length
                     y_2_hit = fabs(y_2 - ys) <= self.paddle_length
                     # Player 1 or 2 lose
@@ -101,21 +99,11 @@ class Pong(Game):
                         bottom_hit = ys <= (self.center - self.bound/2)
                         # Player hit
                         if (y_1_hit and x_1_hit) or (y_2_hit and x_2_hit):
-                            # vertical_hit = True
                             self.bounce.vertical_hit()
-                            # horizontal_hit = False
                             self.bounce.rate += 0.1
                         # Top or bottom wall hit
                         elif top_hit or bottom_hit:
-                            # vertical_hit = False
-                            # horizontal_hit = True
                             self.bounce.horizontal_hit()
-                        # else:
-                        #     vertical_hit = False
-                        #     horizontal_hit = False
-                        # if not self.resetting:
-                        #     xs, ys = ball.send((horizontal_hit,
-                        #                         vertical_hit))
                     self.handle_ball_resetting()
 
     def handle_ball_resetting(self):
@@ -142,7 +130,7 @@ class Pong(Game):
         ball_servo = self.ball.follow_path(self.bounce.data())
         # Let the servos get into position. Yes, yield twice
         ball_servo.__next__()
-        ball_servo.send((False, False))
+        ball_servo.__next__()
         return ball_servo
 
     def win(self, player):
