@@ -27,6 +27,11 @@ class Pong(Game):
     reset_time = 0
     reset_rate = 1
 
+    '''
+    GAME INFO
+    '''
+    win_points = 10
+
     def __init__(self, center, bound, pwm, player_1_controller, player_2_controller,
                  player_1_turret, player_2_turret, npc_turret):
         super().__init__(center, bound, pwm)
@@ -52,6 +57,10 @@ class Pong(Game):
         # vertical_hit = False
         # horizontal_hit = False
         while self.playing:
+            if player_1_points == self.win_points:
+                self.win(1)
+            elif player_2_points == self.win_points:
+                self.win(2)
             angle = random.uniform(0, 6.28)
             ball = self.make_ball(rate=self.ball_rate, angle=angle)
             prev_time = 0
@@ -148,4 +157,4 @@ class Pong(Game):
         npc.laser.on()
         for _ in range(0, 400):
             data.__next__()
-
+        self.playing = False
