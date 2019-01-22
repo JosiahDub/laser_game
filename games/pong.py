@@ -65,7 +65,7 @@ class Pong(Game):
             if random.randint(0, 1):
                 angle = random.uniform(-0.785, 0.785)
             else:
-                angle = random.uniform(2.355, 3,925)
+                angle = random.uniform(2.355, 3.925)
             ball = self.make_ball(rate=self.ball_rate, angle=angle)
             prev_time = 0
             # xs, ys = ball.send((horizontal_hit, vertical_hit))
@@ -163,9 +163,9 @@ class Pong(Game):
         prev_time = 0
         while self.playing:
             self.curr_time = time.time()
-            if self.curr_time - prev_time >= self.time_rate:
+            if self.curr_time - prev_time >= self.time_rate*2:
                 prev_time = self.curr_time
                 data.__next__()
                 spin_spin += 1
-            if spin_spin == 400:
+            if spin_spin == 100:
                 self.playing = False
