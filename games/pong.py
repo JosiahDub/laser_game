@@ -1,8 +1,9 @@
 import time
+import random
 from math import fabs
 from .game import Game
 from src import Player, NPC
-from paths import Bounce
+from paths import Bounce, Circle
 
 
 class Pong(Game):
@@ -29,6 +30,9 @@ class Pong(Game):
     def __init__(self, center, bound, pwm, player_1_controller, player_2_controller,
                  player_1_turret, player_2_turret, npc_turret):
         super().__init__(center, bound, pwm)
+        self.player_1_turret = player_1_turret
+        self.player_2_turret = player_2_turret
+        self.npc_turret = npc_turret
         self.player_1 = Player(bound, bound, pwm,
                                player_1_turret, player_1_controller,
                                no_x=True, fixed_x=int(center + bound/2))
@@ -48,7 +52,8 @@ class Pong(Game):
         # vertical_hit = False
         # horizontal_hit = False
         while self.playing:
-            ball = self.make_ball(self.ball_rate)
+            angle = random.uniform(0, 6.28)
+            ball = self.make_ball(rate=self.ball_rate, angle=angle)
             prev_time = 0
             # xs, ys = ball.send((horizontal_hit, vertical_hit))
             while self.playing:
@@ -126,3 +131,21 @@ class Pong(Game):
         ball_servo.__next__()
         ball_servo.send((False, False))
         return ball_servo
+
+    def win(self, player):
+        if player == 1:
+            del self.player_1.laser
+            center = int(self.center + self.bound/2)
+            npc = NPC(self.pwm, self.player_1_turret)
+        else:
+            del self.player_2.laser
+            center = int(self.center - self.bound / 2)
+            npc = NPC(self.pwm, self.player_2_turret)
+        circle = Circle(center, 375, 25, 0, 2)
+        data = npc.follow_path(circle.data())
+        data.__next__()
+        data.__next__()
+        npc.laser.on()
+        for _ in range(0, 400):
+            data.__next__()
+
