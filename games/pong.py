@@ -159,6 +159,13 @@ class Pong(Game):
         data.__next__()
         data.__next__()
         npc.laser.on()
-        for _ in range(0, 400):
-            data.__next__()
-        self.playing = False
+        spin_spin = 0
+        prev_time = 0
+        while self.playing:
+            self.curr_time = time.time()
+            if self.curr_time - prev_time >= self.time_rate:
+                prev_time = self.curr_time
+                data.__next__()
+                spin_spin += 1
+            if spin_spin == 400:
+                self.playing = False
