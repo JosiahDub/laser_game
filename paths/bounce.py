@@ -1,4 +1,5 @@
-from math import sin, cos, copysign, fabs
+import random
+from math import sin, cos, copysign, fabs, atan2
 from typing import Generator, Tuple
 from .path import Path
 
@@ -56,8 +57,12 @@ class Bounce(Path):
     def horizontal_hit(self):
         self.y_rate *= -1
 
-    def vertical_hit(self):
+    def vertical_hit(self, random_bounce=False):
         self.x_rate *= -1
+        if random_bounce:
+            self._angle = atan2(self.y_rate, self.x_rate)
+            self.angle += random.uniform(-0.1, 0.1)
+
 
     @Path.rate.setter
     def rate(self, rate):
@@ -85,11 +90,6 @@ class Bounce(Path):
         :param angle:
         :return:
         """
-        # Get the sign of the rates before calculating
-        x_sign = copysign(1, self.x_rate)
-        y_sign = copysign(1, self.y_rate)
         self._angle = angle
-        # FIXME: What if the angle is outside the quadrant? May need to remove sign part
-        # Multiply by the original sign to retain direction
-        self.x_rate = x_sign * fabs(self._rate * cos(self._angle))
-        self.y_rate = y_sign * fabs(self._rate * sin(self._angle))
+        self.x_rate = self._rate * cos(self._angle)
+        self.y_rate = self._rate * sin(self._angle)
