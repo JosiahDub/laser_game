@@ -3,3 +3,4 @@ RPi.GPIO
 gpiozero
 cachetools
 scipy
+Adafruit-PCA9685
