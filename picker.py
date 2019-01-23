@@ -9,21 +9,27 @@ class Picker:
 
     def __init__(self):
         self.root = Tk()
+        self.root.columnconfigure(0, weight=1)
+        self.root.rowconfigure(0, weight=1)
+        self.root.rowconfigure(1, weight=1)
+        self.root.rowconfigure(2, weight=1)
         self.root.geometry('1920x1080')
 
         self.maze_button = Button(self.root, text='Maze',
-                                  command=self.play_maze,
-                                  width=1080)
-        self.maze_button.grid(row=0, sticky=E+W)
+                                  command=self.play_maze)
+        self.maze_button.bind('<Return>', self.play_maze)
+        self.maze_button.grid(row=0, column=0, sticky=N+S+E+W)
         self.pong_button = Button(self.root, text='Pong',
                                   command=self.play_pong)
-        self.pong_button.grid(row=1, sticky=E+W)
+        self.pong_button.bind('<Return>', self.play_pong)
+        self.pong_button.grid(row=1, column=0, sticky=N+S+E+W)
         self.missile_defense_button = Button(self.root, text='Missile Defense',
                                              command=self.play_missile_defense)
-        self.missile_defense_button.grid(row=2, sticky=E+W)
+        self.missile_defense_button.bind('<Return>', self.play_missile_defense)
+        self.missile_defense_button.grid(row=2, column=0, sticky=N+S+E+W)
         mainloop()
 
-    def play_maze(self):
+    def play_maze(self, _):
         left, right = pro_controller_factory()
 
         pwm = Adafruit_PCA9685.PCA9685()
