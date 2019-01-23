@@ -38,14 +38,14 @@ class Picker:
         maze = Maze(375, 100, pwm, left, TURRET_3)
         maze.play_on()
 
-    def play_pong(self):
+    def play_pong(self, _):
         c_1, c_2 = pro_controller_factory()
         pwm = Adafruit_PCA9685.PCA9685()
         pwm.set_pwm_freq(60)
         p = Pong(375, 100, pwm, c_1, c_2, TURRET_2, TURRET_4, TURRET_3)
         p.play_on()
 
-    def play_missile_defense(self):
+    def play_missile_defense(self, _):
         left_pro, _ = pro_controller_factory()
         pwm = Adafruit_PCA9685.PCA9685()
         pwm.set_pwm_freq(60)
