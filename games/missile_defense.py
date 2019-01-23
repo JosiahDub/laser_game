@@ -28,7 +28,7 @@ class MissileDefense(Game):
     # Delay until the player can fire again
     player_attack_rate = 1
     # Size of player attack
-    bomb_radius = 10
+    bomb_radius = 15
     player_fired = False
     fire_time = 0
     skip_frame = False
