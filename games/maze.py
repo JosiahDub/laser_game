@@ -95,9 +95,17 @@ WALLS.add_wall(y_start=0, y_end=1,   x_start=1)  # 19
 
 
 class Maze(Game):
+    """
+    Find your way to the end!
+    """
 
+    '''
+    GAME INFO
+    '''
     # TOUCHDOWN
     endzone = [[0, 16], [0, 16]]
+
+    lose_time = 360
 
     def __init__(self, center, bound, pwm,
                  controller: PlayerController,
@@ -114,6 +122,7 @@ class Maze(Game):
         self.playing = True
         binding = {}
         prev_time = 0
+        start_time = time.time()
         while self.playing:
             curr_time = time.time()
             if curr_time - prev_time >= self.time_rate:
@@ -126,7 +135,9 @@ class Maze(Game):
                 if self.endzone[0][0] <= centered_x <= self.endzone[0][1] and \
                         self.endzone[1][0] <= centered_y <= self.endzone[1][1]:
                     self.win()
-                    break
+                    self.playing = False
+                if curr_time - start_time >= self.lose_time:
+                    self.playing = False
 
     def win(self):
         # Free up the GPIO pin
